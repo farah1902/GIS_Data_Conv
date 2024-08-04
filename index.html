@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta name="author" content="Saad Farah" />
+    <meta name='description' content="A geospatial utility application built with leafletjs, KML, GeoJSON, SHP.">
+    <meta name='keywords' content='JavaScript,Web,HTML'>
+    <meta name="subject" content="Geospatial Utility" />
+    <link rel="icon" href="img/gep2.ico" type="image/x-icon" sizes="16x16" />
+    <link rel="icon" href="img/gep2.ico" type="image/x-icon" sizes="32x32" />
+    <link rel="icon" href="img/gep2.ico" type="image/x-icon" sizes="48x48" />
+    <title>Geo Viewer | Upload, Preview & Convert GIS Data</title>
+    <link rel='stylesheet' href='css/leaflet-1.3.1.css' />
+    <script type='text/javascript' src='js/leaflet-1.3.1.js'></script>
+    <script type='text/javascript' src='js/shp.min.js'></script>
+    <script type='text/javascript' src='js/shpwrite.js'></script>
+	<script type='text/javascript' src='js/KMLStrtoGeoJSON.js'></script>
+	<script type='text/javascript' src='js/tokml.js'></script>
+	<script type='text/javascript' src='js/json2csv.js'></script>
+	<script type='text/javascript' src='js/turf.min.js'></script>
+	<link rel='stylesheet' type='text/css' href='css/bootstrap-4.5.2.min.css' />
+    <link rel='stylesheet' type='text/css' href='css/offcanvas.css' />
+    <link rel='stylesheet' type='text/css' href='css/custom.css' />
+	</head>
+	<body>
+		<noscript>You need to enable JavaScript to run this app.</noscript>
+		<div id='menu-bar' class='bg-dark w-100 p-1'>
+			
+			<div class='bg-none float-left p-0 ml-1'>
+	 			<div class="input-group">
+			        <div class="input-group-prepend">
+					<img src="img/park-energy.png" alt="gep">
+					&nbsp;&nbsp;&nbsp;
+			           <span class="input-group-text rounded-0"><strong class='symbol mr-1'>⭱</strong>Upload</span>
+			        </div>
+			        <select id='inputSpatialFormat' class='custom-select rounded-0'>
+			        	<option value='GEOJSON'>GEOJSON</option>
+						<option value='KML'>KML</option>
+						<option value='SHP'>SHP</option>
+			        </select>
+		    	</div>
+	    	</div>
+	    	<div class='bg-none float-left p-0'>
+		    	<div class="custom-file p-0 m-0 border-0">
+				    <input id='inputSpatialFormatBtn' class='custom-file-input rounded-0' type='file' multiple='false' accept='.geojson,.json' />
+				    <label class="custom-file-label symbol rounded-0 mb-0" for="inputSpatialFormatBtn">Choose file…</label>
+				</div>
+			</div>
+			<div class="bg-none float-left rounded-0 p-1 btn-group btn-group-sm ml-1 mr-1">
+				<button id='resetMapViewBtn' type='button' class='btn btn-sm bg-secondary text-white border-white symbol rounded-circle pl-1 pr-1 pt-0 pb-0 mr-2 function-btn' data-toggle="tooltip" data-original-title="<p class='mb-0 small text-left'>Re-positions map to its default bounds and zoom level</p>">⌖</button>
+
+			  	<button id='clearAllBtn' type='button' class='btn btn-sm bg-secondary text-white border-white symbol rounded-circle pl-1 pr-1 pt-0 pb-0 mr-2 function-btn' data-toggle="tooltip" data-original-title="<p class='mb-0 small text-left'>To reset all filters to its default states and clear all rendered map layers</p>">⭮</button>
+			</div>
+			<div class='bg-none float-right p-0'>
+	 			<div class="input-group">
+			        <div class="input-group-prepend rounded-0">
+			           <span class="input-group-text rounded-0">Export As<span class='symbol'>…</span></span>
+			        </div>
+			        <select id='outputSpatialFormat' class='custom-select rounded-0' disabled>
+			        	<option value="GEOJSON">GEOJSON</option>
+						<option value="KML">KML</option>
+						<option value='SHP'>SHP</option>
+			        </select>
+			        <div class="input-group-append rounded-0">
+			           <span class="input-group-text p-0 bg-none border-0"><button id='outputSpatialFormatBtn' type='button' class='btn btn-sm bg-success text-white border-white symbol rounded-circle pl-1 pr-1 pt-0 pb-0 ml-2 mr-1 function-btn' data-toggle="tooltip" data-original-title="<p class='mb-0 small text-left'>Save output as spatial data file</p>" disabled>⭳</button></span>
+			        </div>
+					
+		    	</div>
+				
+	    	</div>
+		</div>
+		<div class='row h-100 p-1 no-gutters'>
+			<div class='col-sm-7 no-gutters'>
+				<div id="map" class='border w-100 h-100'></div>
+			</div>
+
+			<!-- for better usage, wrap the tabs and contents ⇲⇱ -->
+			<div class="col-sm-5 bg-light border h-100 no-gutters small">
+				<!-- Nav tabs -->
+				<ul id="panelTabs" class="nav nav-tabs symbol" role="tablist">
+				  <li class="nav-item w-30">
+				    <a class="nav-link symbol pr-1 active" id="table-tab" href="#table" data-toggle="tab" data-height="true" aria-controls="table" aria-selected="true" role="tab"><span class='lead tabSymbol'>▦</span> Table <button type="button" class="p-1 m-0 btn btn-sm btn-dark symbol float-right" data-toggle="popover" data-title="Merge/Delete Attribute(s)" data-dismissible="true" data-placement="right" data-content='<div class="row">
+	                        <div class="col-sm-12" style="text-align:left">
+	                            <p><span class="symbol">❶</span> <span class="symbolInfo rounded-circle bg-info symbol text-center text-white">⧉</span> Merge Polygons based on attribute</p>
+	                            <p><span class="symbol">❷</span> <span class="symbolInfo rounded-circle bg-danger symbol text-center text-white">✕</span> Select to exclude from exported output</p>
+	                        </div>
+	                    </div>'><span class='unicode'>ᶜˡⁱᶜᵏ</span></button>
+
+
+	                    
+
+                    </a>
+				  </li>
+				  
+				  <li class="nav-item w-30">
+				    <a class="nav-link symbol pr-1" id="geojson-tab" href="#geojson" data-toggle="tab" data-height="true" aria-controls="geojson" aria-selected="false" role="tab"><span class='lead tabSymbol'>👁</span> GeoJSON <button id='copyGeojsonDisplay' type='button' data-original-title="<p class='mb-0 small text-left'>Copies GeoJSON text to clipboard</p>" data-toggle="tooltip" class='p-1 m-0 btn btn-sm btn-dark symbol float-right'><span class='unicode'>ᶜᵒᵖʸ</span></button>
+				    </a>
+				  </li>
+
+				</ul>
+
+				<!-- Tab panes ⿻ -->
+				<div class="tab-content">
+				  <div role="tabpanel" class="tab-pane fade h-100 active show" aria-labelledby="table-tab" id="table">
+				  	<div id='mapPropsDatatableContainer' class='tabContainer table-responsive-sm h-100'></div>
+				  </div>
+				  <!-- ⅰⅱ ⅲ ⅳ ⅴ ⅵ ⅶ ⅷ ⅸ ⅹ ⅺ ⅻ -->
+				  <div role="tabpanel" class="tab-pane fade h-100" aria-labelledby="geojson-tab" id="geojson">
+				  	<div id='geojsonDisplayContainer' class='tabContainer'></div>
+				  </div>
+				</div>
+
+			</div>
+
+			
+		</div>
+	</body>
+	<script type='text/javascript' src='js/polyfill.js'></script>
+    <script type='text/javascript' src='js/ie10-viewport-bug-workaround.js'></script>
+    <script type='text/javascript' src='js/bootstrap-native-v4.js'></script>
+    <script type='text/javascript' src='js/custom.js'></script>
+</html>
