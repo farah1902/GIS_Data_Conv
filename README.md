@@ -55,3 +55,11 @@
 		<li><a href='https://github.com/mapbox/shp-write' target='_blank'>shp-write</a>: Converts <code>GeoJSON</code>➟<code>SHP</code></li>
 	</ul>
 </div>
+<br/><br/><br/>
+<div stymle="height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;">
+<span ><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAXZJREFUKFNjZMABZp5JYxVm+az2+z/DpkjD5cowZYzY1IMUi/P+7Pzz+3cMJze76LMHH2VTHdc9AanF0DDjYLCqjBzfLCYmJoffv34zsLAyM7x/+a0rxnxlOYaGpaejlLgF2FaxszMb//r5m+HL528MQiL8DN++/L4arLVIB0PDxlvx69g4WAJBEm9evWfg4eVi4OBkZ/j7l+Gqj+JcVA2zDgb5ySoIboQ58trFuwxa+nC/XvWUQ9Ow8XbCFTZ2Zm2Q6dcv3mXQ0FNiYGSEePHv739XfZTno9qw/VHyFQYGBu3PH78yPH/8mkFNRwEegF8+/DwYqrfEAcUPMA33bz1hEBEXZODl54ZrePHgc2Ci3aoNKBo230s88OvnL/t7Nx8zqOsoMrCysUCc8/f/Bx/FeYIYETf3cLg+A8P3+p+/fgUqqkpDFP/59/Pzh19ZkUZL52GN6YJ+AwETO/V6QWHuvF8//rz9/u13Jgv7n81h2qt/wTQAAJeGjg3D55B1AAAAAElFTkSuQmCC" /><a href="https://leafletjs.com/" title="A JavaScript library for interactive maps" target="_blank">Leaflet</a> | <span class="symbol">© Created by</span> <a href="https://saadfrh.github.io/" target="_blank"></span>𝕾𝖆𝖆𝖉 𝖋𝖆𝖗𝖆𝖍✍</a></span>
+</div>
